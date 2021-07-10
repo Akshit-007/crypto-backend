@@ -15,6 +15,9 @@ const userschema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    fav: [{
+        type: String
+    }],
     hashed_password: {
         type: String,
         required: true

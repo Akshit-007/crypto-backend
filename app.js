@@ -26,6 +26,7 @@ mongoose.connection.on('error', err => {
 // bring in routes
 const authroutes=require('./route/auth');
 const userroutes=require('./route/user');
+const cryptoroutes=require('./route/crypto');
 //apidocs
 app.get('/',(req,res) =>
 {
@@ -47,6 +48,7 @@ app.use(expressvalidator());
 app.use(cors());
 app.use("/",authroutes);
 app.use("/",userroutes);
+app.use("/",cryptoroutes);
 
 // custom middleware
 app.use(function (err, req, res, next) {
