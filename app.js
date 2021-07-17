@@ -9,6 +9,9 @@ const expressvalidator = require("express-validator");
 const fs = require('fs');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const Curr = require('./models/curr');
+require("./demo.js")
+
 
 dotenv.config()
 
@@ -38,6 +41,8 @@ app.get('/',(req,res) =>
         res.json(docs);
     })
 })
+
+
 
 
 //middleware
