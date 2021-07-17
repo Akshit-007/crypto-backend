@@ -9,6 +9,8 @@ router.post("/addToFav/:userId",requiresignin ,cryptoController.addToFav);
 
 router.get("/getFav/:userId",requiresignin ,cryptoController.getFav);
 
+router.post("/notification/:userId",requiresignin ,cryptoController.postNotify);
+
 router.param("userId",userbyid);
 
 

@@ -18,6 +18,13 @@ const userschema = new mongoose.Schema({
     fav: [{
         type: String
     }],
+    notification: [
+        {
+            currency: String,
+            upper: String,
+            lower: String
+        }
+    ],
     hashed_password: {
         type: String,
         required: true
