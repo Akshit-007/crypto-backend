@@ -21,6 +21,27 @@ exports.addToFav = (req, res, next) => {
         })
 }
 
+exports.removeFromFav = (req, res, next) => {
+    const curr = req.body.curr
+    let favCrypto = []
+    User.findById(req.profile._id)
+        .then(user => {
+            favCrypto = user.fav.filter(c => c!=curr)
+            user.fav = favCrypto
+            return user.save()
+        })
+        .then(result => {
+            res.status(201).json({
+                message: "remove currency from favourite" 
+            })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: "Server error where remove from favourite"
+            })
+        })
+}
+
 
 exports.getFav = (req, res, next) => {
     User.findById(req.profile._id)
