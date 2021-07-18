@@ -39,7 +39,7 @@ const fetchFav = (fav) => {
         console.log(err)
     })
 }
-cron.schedule('*/10 * * * *', () => {
+cron.schedule('*/1000 * * * *', () => {
 // cron.schedule("*/20 * * * * *", () => {
     let cString = "", new1 = "", arrnoti=[], userL = [];
     Curr.findById("60f26f8c80d75fda8e757b1a")
