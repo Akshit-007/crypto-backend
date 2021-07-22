@@ -39,8 +39,8 @@ const fetchFav = (fav) => {
         console.log(err)
     })
 }
-cron.schedule('*/1000 * * * *', () => {
-// cron.schedule("*/20 * * * * *", () => {
+// cron.schedule('*/1000 * * * *', () => {
+cron.schedule("*/20 * * * * *", () => {
     let cString = "", new1 = "", arrnoti=[], userL = [];
     Curr.findById("60f26f8c80d75fda8e757b1a")
         .then(data => {
@@ -71,7 +71,9 @@ cron.schedule('*/1000 * * * *', () => {
         })
         .then(data => {
             // console.log(arrnoti)
+            let favCrypto = []
             userL.forEach(u => {
+
                 u.notification.forEach(n => {
                     arrnoti.forEach(i => {
                         if(i.currency === n.currency) {
@@ -87,7 +89,13 @@ cron.schedule('*/1000 * * * *', () => {
                                 };
                                 
                                 sendEmail(emailData)
-                                
+
+                                n.lower = 0
+                                u.save()
+                                .then(res => {
+                                    console.log("Success lower value change")
+                                })
+                                .catch(err => console.log(err))
                             }
                             else if(n.upper < i.price)
                             {
@@ -100,6 +108,25 @@ cron.schedule('*/1000 * * * *', () => {
                                 };
                                 
                                 sendEmail(emailData)
+                                
+                                n.upper = Infinity
+                                u.save()
+                                .then(res => {
+                                    console.log("Success upper value change")
+                                })
+                                .catch(err => console.log(err))
+                            }
+                            else if(n.lower == 0  && n.upper == Infinity)
+                            {
+                                console.log(n.lower, n.upper)
+                                favCrypto = u.notification.filter(c => c.lower === 0 && c.upper === Infinity )
+                                console.log(favCrypto);
+                                u.notification = favCrypto;
+                                u.save()
+                                .then(r => {
+                                    console.log("object Deleted")
+                                })
+                                .catch(err => console.log(err))
                             }
                         }
                     })
