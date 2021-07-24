@@ -14,8 +14,8 @@ const sendEmail = emailData => {
         secure: false,
         requireTLS: true,
         auth: {
-            user: "sahildabhi48@gmail.com",
-            pass: "ispmnqlzijyfzgll"
+            user: "parthsorathiya4567@gmail.com",
+            pass: "Sahil@0101"
         }
     });
     return (
@@ -34,14 +34,14 @@ const fetchFav = (fav) => {
     return fetch(API, {
         method: "GET"
     })
-    .then((response) => response.json())
-    .catch(err => {
-        console.log(err)
-    })
+        .then((response) => response.json())
+        .catch(err => {
+            console.log(err)
+        })
 }
 // cron.schedule('*/1000 * * * *', () => {
-cron.schedule("*/20 * * * * *", () => {
-    let cString = "", new1 = "", arrnoti=[], userL = [];
+cron.schedule("*/10 * * * * *", () => {
+    let cString = "", new1 = "", arrnoti = [], userL = [];
     Curr.findById("60f26f8c80d75fda8e757b1a")
         .then(data => {
             data.notify.forEach(c => {
@@ -52,81 +52,88 @@ cron.schedule("*/20 * * * * *", () => {
         })
         .then(string => {
             return fetchFav(string)
-            .then(data => {
-                arrnoti = data.map(i => {
-                    return {
-                        currency: i.currency,
-                        price: i.price
-                    }
-                }) 
-                return arrnoti
-            })
+                .then(data => {
+                    arrnoti = data.map(i => {
+                        return {
+                            currency: i.currency,
+                            price: i.price
+                        }
+                    })
+                    return arrnoti
+                })
         })
         .then(data => {
-            return User.find({}, {notification: 1, email: 1, name: 1})
-            .then(users => {
-                userL = users
-                return userL
-            })
+            return User.find({}, { notification: 1, email: 1, name: 1 })
+                .then(users => {
+                    userL = users
+                    return userL
+                })
         })
         .then(data => {
             // console.log(arrnoti)
-            let favCrypto = []
             userL.forEach(u => {
-
                 u.notification.forEach(n => {
+
                     arrnoti.forEach(i => {
-                        if(i.currency === n.currency) {
-                            if(n.lower > i.price)
-                            {
-                                console.log("lower value" , n.lower , u.name)
-                                
+                        if (i.currency === n.currency) {
+                            if (n.lower > i.price) {
+                                console.log("lower value", n.lower, u.name)
+
                                 const emailData = {
-                                    from: 'noreply@node-react.com',
+                                    from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
                                     to: u.email,
                                     subject: 'Notification Crypto',
-                                    text: `your notified crypto price for ${n.currency} decreased than your notified value ${n.lower} and now its value is ${i.price}`
+                                    text: `Your notified crypto price for ${n.currency} decreased than your notified value ${n.lower} , it's value is ${i.price}`
                                 };
-                                
+
                                 sendEmail(emailData)
 
                                 n.lower = 0
                                 u.save()
-                                .then(res => {
-                                    console.log("Success lower value change")
-                                })
-                                .catch(err => console.log(err))
+                                    .then(res => {
+                                        console.log("Success lower value change")
+                                    })
+                                    .catch(err => console.log(err))
+
                             }
-                            else if(n.upper < i.price)
-                            {
+                            else if (n.upper < i.price) {
                                 console.log("upper value", n.upper, u.name)
                                 const emailData = {
-                                    from: 'noreply@node-react.com',
+                                    from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
                                     to: u.email,
                                     subject: 'Notification Crypto',
                                     text: `your notified crypto price for ${n.currency} increased than your notified value ${n.upper} and now its value is ${i.price}`
                                 };
-                                
+
+                                n.upper = 10000000000;
+
                                 sendEmail(emailData)
-                                
+
                                 n.upper = Infinity
                                 u.save()
-                                .then(res => {
-                                    console.log("Success upper value change")
-                                })
-                                .catch(err => console.log(err))
+                                    .then(res => {
+                                        console.log("Success upper value change")
+                                    })
+                                    .catch(err => console.log(err))
                             }
-                            else if(n.lower == 0  && n.upper == Infinity)
-                            {
-                                console.log(n.lower, n.upper)
-                                favCrypto = u.notification.filter(c => c.lower === 0 && c.upper === Infinity )
+                            else if (n.lower == 0 && n.upper == Infinity) {
+                                // console.log(n.lower, n.upper)
+                                let favCrypto = []
+                                u.notification.forEach(i => {
+                                    if (i.lower == 0 && i.upper == Infinity) {
+                                        console.log(i)
+                                        return;
+                                    }
+                                    favCrypto.push(i)
+                                })
                                 console.log(favCrypto);
                                 u.notification = favCrypto;
                                 u.save()
-                                .then(r => {
-                                    console.log("object Deleted")
-                                })
-                                .catch(err => console.log(err))
+                                    .then(r => {
+                                        -
+                                        console.log("object Deleted")
+                                    })
+                                    .catch(err => console.log(err))
                             }
                         }
                     })
@@ -137,9 +144,3 @@ cron.schedule("*/20 * * * * *", () => {
             console.log(err)
         })
 });
-
-
-
-
-
-
