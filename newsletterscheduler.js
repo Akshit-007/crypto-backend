@@ -14,8 +14,8 @@ const sendEmail = emailData => {
         secure: false,
         requireTLS: true,
         auth: {
-            user: "badshah08152@gmail.com",
-            pass: "86jayyoawoa86"
+            user: "cryptotracker15@gmail.com",
+            pass: "crypto_tracker_jsa_15"
         }
     });
     return (
@@ -101,7 +101,7 @@ cron.schedule("0 0 * * *", () => {
                     })
                 })
                 const emailData = {
-                    from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
+                    from: '"noreply@node-react.com" <cryptotracker15@gmail.com>',
                     to: user.subemail,
                     subject: 'Newsletter of your Favorite Crypto Currencies',
                     html: htmlC

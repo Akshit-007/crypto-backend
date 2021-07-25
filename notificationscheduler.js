@@ -15,8 +15,8 @@ const sendEmail = emailData => {
         secure: false,
         requireTLS: true,
         auth: {
-            user: "badshah08152@gmail.com",
-            pass: "86jayyoawoa86"
+            user: "cryptotracker15@gmail.com",
+            pass: "crypto_tracker_jsa_15"
         }
     });
     return (
@@ -83,7 +83,7 @@ cron.schedule("*/60 * * * * *", () => {
                                 console.log("lower value", n.lower, u.name)
                                 
                                 const emailData = {
-                                    from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
+                                    from: '"noreply@node-react.com" <cryptotracker15@gmail.com>',
                                     to: u.email,
                                     subject: 'Notification Crypto',
                                     text: `Your notified crypto price for ${n.currency} decreased than your notified value ${n.lower} , it's value is ${i.price}`
@@ -102,7 +102,7 @@ cron.schedule("*/60 * * * * *", () => {
                             else if (n.upper < i.price && n.upper != 0) {
                                 console.log("upper value", n.upper, u.name)
                                 const emailData = {
-                                    from: "noreply@node-react.com",
+                                    from: "noreply@node-react.com <cryptotracker15@gmail.com>",
                                     to: u.email,
                                     subject: 'Notification Crypto',
                                     text: `your notified crypto price for ${n.currency} increased than your notified value ${n.upper} and now its value is ${i.price}`
