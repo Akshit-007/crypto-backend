@@ -42,7 +42,7 @@ const fetchFav = (fav) => {
 
 
 // cron.schedule('*/1000 * * * *', () => {
-cron.schedule("*/60 * * * * *", () => {
+cron.schedule("*/160 * * * * *", () => {
     let cString = "", new1 = "", arrnoti = [], userL = [];
     Curr.findById("60f26f8c80d75fda8e757b1a")
         .then(data => {
@@ -55,7 +55,7 @@ cron.schedule("*/60 * * * * *", () => {
         .then(string => {
             return fetchFav(string)
                 .then(data => {
-                    // console.log("Noti" ,data)
+                    console.log("Noti" ,data)
                     arrnoti = data.map(i => {
                         return {
                             currency: i.currency,
