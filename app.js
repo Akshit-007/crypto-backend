@@ -68,9 +68,9 @@ const port=process.env.PORT || 8080;
 
 if(process.env.NODE_ENV == 'production')
 {
-    app.use(express.static("food-front-react-main/build"));
+    app.use(express.static("second-crypto-frontend/build"));
     app.get("*",(req,res)=>{
-        res.sendFile(path.resolve(__dirname,'food-front-react-main','build','index.html'))
+        res.sendFile(path.resolve(__dirname,'second-crypto-frontend','build','index.html'))
     })
 }
 
