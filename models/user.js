@@ -35,15 +35,6 @@ const userschema = new mongoose.Schema({
         default: Date.now
     },
     updated: Date,
-    address:
-    {
-        type: String,
-        trim:true
-    },
-    gender:
-    {
-        type: String
-    }
 })
 
 userschema.virtual('password')
