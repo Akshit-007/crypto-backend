@@ -86,7 +86,7 @@ cron.schedule("*/60 * * * * *", () => {
                                     from: '"noreply@node-react.com" <cryptotracker15@gmail.com>',
                                     to: u.email,
                                     subject: 'Notification Crypto',
-                                    text: `Your notified crypto price for ${n.currency} decreased than your notified value ${n.lower} , it's value is ${i.price}`
+                                    text: ` BUY CRYPTO  \nYour notified crypto price for ${n.currency} decreased than your notified value ${n.lower} , it's value is ${i.price}`
                                 };
 
                                 sendEmail(emailData)
@@ -105,7 +105,7 @@ cron.schedule("*/60 * * * * *", () => {
                                     from: "noreply@node-react.com <cryptotracker15@gmail.com>",
                                     to: u.email,
                                     subject: 'Notification Crypto',
-                                    text: `your notified crypto price for ${n.currency} increased than your notified value ${n.upper} and now its value is ${i.price}`
+                                    text: ` SELL CRYPTO \n your notified crypto price for ${n.currency} increased than your notified value ${n.upper} and now its value is ${i.price}`
                                 };
 
                                 n.upper = 10000000000;
