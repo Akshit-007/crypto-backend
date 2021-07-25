@@ -1,17 +1,86 @@
 const User = require('../models/user');
 const Curr = require('../models/curr');
 
+exports.removeSub = (req, res, next) => {
+    User.findById(req.profile._id)
+    .then(user => {
+        user.sub = false
+        user.save()
+        .then(result => {
+            res.status(201).json({
+                message: "Success",
+            })
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "Server error"
+        })
+    })
+}
+
+exports.getSub = (req, res, next) => {
+    User.findById(req.profile._id)
+    .then(user => {
+        if(user.sub == true) {
+            return res.status(200).json({
+                sub: true,
+                subemail: user.subemail
+            })
+        }
+        res.status(200).json({
+            sub: false,
+            subemail: ""
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "Server error"
+        })
+    })
+}
+
+exports.addSub = (req, res, next) => {
+    const subemail = req.body.sub
+    User.findById(req.profile._id)
+    .then(user => {
+        user.subemail = subemail
+        user.sub = true
+        user.save()
+        .then(result => {
+            res.status(201).json({
+                message: "Success",
+            })
+        })
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "Server error"
+        })
+    })
+}
+
 
 exports.addToFav = (req, res, next) => {
     const curr = req.body.curr
     User.findById(req.profile._id)
         .then(user => {
+            const ind = user.fav.findIndex(c => {
+                return c.toString() === curr.toString()
+            })
+            if(ind != -1) {
+                return res.status(200).json({
+                    message: "Already Added :)",
+                    check: true
+                })
+            }
             user.fav.push(curr)
-            return user.save()
-        })
-        .then(result => {
-            res.status(200).json({
-                message: "Success"
+            user.save()
+            .then(result => {
+                res.status(200).json({
+                    message: "Success",
+                    check: false
+                })
             })
         })
         .catch(err => {
@@ -46,6 +115,13 @@ exports.removeFromFav = (req, res, next) => {
 exports.getFav = (req, res, next) => {
     User.findById(req.profile._id)
         .then(user => {
+            if(user.fav.length == 0) {
+                return res.status(200).json({
+                    message: "Success",
+                    check: true,
+                    fav: "No Favorites"
+                })
+            }
             let cString = "", new1 = "";
             user.fav.forEach(c => {
                 cString = new1.concat(c, ',');
@@ -53,6 +129,7 @@ exports.getFav = (req, res, next) => {
             })
             res.status(200).json({
                 message: "Success",
+                check: false,
                 fav: cString
             })
         })

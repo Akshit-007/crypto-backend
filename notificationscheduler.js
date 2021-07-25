@@ -2,6 +2,7 @@ var cron = require('node-cron');
 const Curr = require('./models/curr');
 const User = require('./models/user');
 const fetch = require('node-fetch');
+const axios = require("axios")
 const { forEach } = require('lodash');
 
 const nodeMailer = require("nodemailer");
@@ -14,8 +15,8 @@ const sendEmail = emailData => {
         secure: false,
         requireTLS: true,
         auth: {
-            user: "parthsorathiya4567@gmail.com",
-            pass: "Sahil@0101"
+            user: "badshah08152@gmail.com",
+            pass: "86jayyoawoa86"
         }
     });
     return (
@@ -27,20 +28,21 @@ const sendEmail = emailData => {
 };
 
 
+// let removeByteOrderMark = a=>a[0]=="\ufeff"?a.slice(1):a
 const fetchFav = (fav) => {
 
     const API = `https://api.nomics.com/v1/currencies/ticker?key=d6086cf0c1b8779ec879a4282a41c55ed2e070e2&ids=${fav}&interval=1d,30d`
 
-    return fetch(API, {
-        method: "GET"
+    return axios.get(API)
+    .then((response) => response.data)
+    .catch(err => {
+        console.log(err)
     })
-        .then((response) => response.json())
-        .catch(err => {
-            console.log(err)
-        })
 }
+
+
 // cron.schedule('*/1000 * * * *', () => {
-cron.schedule("*/10 * * * * *", () => {
+cron.schedule("*/60 * * * * *", () => {
     let cString = "", new1 = "", arrnoti = [], userL = [];
     Curr.findById("60f26f8c80d75fda8e757b1a")
         .then(data => {
@@ -53,6 +55,7 @@ cron.schedule("*/10 * * * * *", () => {
         .then(string => {
             return fetchFav(string)
                 .then(data => {
+                    // console.log("Noti" ,data)
                     arrnoti = data.map(i => {
                         return {
                             currency: i.currency,
@@ -76,9 +79,9 @@ cron.schedule("*/10 * * * * *", () => {
 
                     arrnoti.forEach(i => {
                         if (i.currency === n.currency) {
-                            if (n.lower > i.price) {
+                            if (n.lower > i.price && n.lower != Infinity) {
                                 console.log("lower value", n.lower, u.name)
-
+                                
                                 const emailData = {
                                     from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
                                     to: u.email,
@@ -96,10 +99,10 @@ cron.schedule("*/10 * * * * *", () => {
                                     .catch(err => console.log(err))
 
                             }
-                            else if (n.upper < i.price) {
+                            else if (n.upper < i.price && n.upper != 0) {
                                 console.log("upper value", n.upper, u.name)
                                 const emailData = {
-                                    from: '"noreply@node-react.com" <parthsorathiya4567@gmail.com>',
+                                    from: "noreply@node-react.com",
                                     to: u.email,
                                     subject: 'Notification Crypto',
                                     text: `your notified crypto price for ${n.currency} increased than your notified value ${n.upper} and now its value is ${i.price}`
@@ -116,11 +119,11 @@ cron.schedule("*/10 * * * * *", () => {
                                     })
                                     .catch(err => console.log(err))
                             }
-                            else if (n.lower == 0 && n.upper == Infinity) {
+                            else if ((n.lower == 0 && n.upper == Infinity) || (n.lower == 0 && n.upper == 0) || (n.lower == Infinity && n.upper == Infinity)) {
                                 // console.log(n.lower, n.upper)
                                 let favCrypto = []
                                 u.notification.forEach(i => {
-                                    if (i.lower == 0 && i.upper == Infinity) {
+                                    if ((n.lower == 0 && n.upper == Infinity) || (n.lower == 0 && n.upper == 0) || (n.lower == Infinity && n.upper == Infinity) ) {
                                         console.log(i)
                                         return;
                                     }

@@ -13,6 +13,12 @@ router.get("/getFav/:userId",requiresignin ,cryptoController.getFav);
 
 router.post("/notification/:userId",requiresignin ,cryptoController.postNotify);
 
+router.post("/addSub/:userId",requiresignin ,cryptoController.addSub);
+
+router.get("/getSub/:userId",requiresignin ,cryptoController.getSub);
+
+router.post("/removeSub/:userId",requiresignin ,cryptoController.removeSub);
+
 router.param("userId",userbyid);
 
 

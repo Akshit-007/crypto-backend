@@ -15,6 +15,12 @@ const userschema = new mongoose.Schema({
         trim: true,
         required: true
     },
+    subemail: {
+        type: String,
+    },
+    sub: {
+        type: Boolean
+    },
     fav: [{
         type: String
     }],
