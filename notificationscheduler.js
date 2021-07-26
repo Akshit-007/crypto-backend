@@ -55,7 +55,7 @@ cron.schedule("*/160 * * * * *", () => {
         .then(string => {
             return fetchFav(string)
                 .then(data => {
-                    console.log("Noti" ,data)
+                    // console.log("Noti" ,data)
                     arrnoti = data.map(i => {
                         return {
                             currency: i.currency,
