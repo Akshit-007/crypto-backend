@@ -3,61 +3,61 @@ const Curr = require('../models/curr');
 
 exports.removeSub = (req, res, next) => {
     User.findById(req.profile._id)
-    .then(user => {
-        user.sub = false
-        user.save()
-        .then(result => {
-            res.status(201).json({
-                message: "Success",
+        .then(user => {
+            user.sub = false
+            user.save()
+                .then(result => {
+                    res.status(201).json({
+                        message: "Success",
+                    })
+                })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: "Server error"
             })
         })
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: "Server error"
-        })
-    })
 }
 
 exports.getSub = (req, res, next) => {
     User.findById(req.profile._id)
-    .then(user => {
-        if(user.sub == true) {
-            return res.status(200).json({
-                sub: true,
-                subemail: user.subemail
+        .then(user => {
+            if (user.sub == true) {
+                return res.status(200).json({
+                    sub: true,
+                    subemail: user.subemail
+                })
+            }
+            res.status(200).json({
+                sub: false,
+                subemail: ""
             })
-        }
-        res.status(200).json({
-            sub: false,
-            subemail: ""
         })
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: "Server error"
+        .catch(err => {
+            res.status(500).json({
+                error: "Server error"
+            })
         })
-    })
 }
 
 exports.addSub = (req, res, next) => {
     const subemail = req.body.sub
     User.findById(req.profile._id)
-    .then(user => {
-        user.subemail = subemail
-        user.sub = true
-        user.save()
-        .then(result => {
-            res.status(201).json({
-                message: "Success",
+        .then(user => {
+            user.subemail = subemail
+            user.sub = true
+            user.save()
+                .then(result => {
+                    res.status(201).json({
+                        message: "Success",
+                    })
+                })
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: "Server error"
             })
         })
-    })
-    .catch(err => {
-        res.status(500).json({
-            error: "Server error"
-        })
-    })
 }
 
 
@@ -68,7 +68,7 @@ exports.addToFav = (req, res, next) => {
             const ind = user.fav.findIndex(c => {
                 return c.toString() === curr.toString()
             })
-            if(ind != -1) {
+            if (ind != -1) {
                 return res.status(200).json({
                     message: "Already Added :)",
                     check: true
@@ -76,12 +76,12 @@ exports.addToFav = (req, res, next) => {
             }
             user.fav.push(curr)
             user.save()
-            .then(result => {
-                res.status(200).json({
-                    message: "Success",
-                    check: false
+                .then(result => {
+                    res.status(200).json({
+                        message: "Success",
+                        check: false
+                    })
                 })
-            })
         })
         .catch(err => {
             res.status(500).json({
@@ -95,13 +95,13 @@ exports.removeFromFav = (req, res, next) => {
     let favCrypto = []
     User.findById(req.profile._id)
         .then(user => {
-            favCrypto = user.fav.filter(c => c!=curr)
+            favCrypto = user.fav.filter(c => c != curr)
             user.fav = favCrypto
             return user.save()
         })
         .then(result => {
             res.status(201).json({
-                message: "remove currency from favourite" 
+                message: "remove currency from favourite"
             })
         })
         .catch(err => {
@@ -115,7 +115,7 @@ exports.removeFromFav = (req, res, next) => {
 exports.getFav = (req, res, next) => {
     User.findById(req.profile._id)
         .then(user => {
-            if(user.fav.length == 0) {
+            if (user.fav.length == 0) {
                 return res.status(200).json({
                     message: "Success",
                     check: true,
@@ -127,6 +127,7 @@ exports.getFav = (req, res, next) => {
                 cString = new1.concat(c, ',');
                 new1 = cString;
             })
+
             res.status(200).json({
                 message: "Success",
                 check: false,
@@ -156,7 +157,7 @@ exports.postNotify = (req, res) => {
                         data.notify.push(curr)
                         return data.save()
                     }
-        
+
                     const arr = data.notify
                     const ind = arr.findIndex(c => {
                         return c.toString() === curr.toString()

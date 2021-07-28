@@ -1,5 +1,5 @@
 const express = require('express')
-const app=express()
+const app = express()
 
 const mongoose = require('mongoose');
 const morgan = require("morgan");
@@ -15,30 +15,34 @@ require("./newsletterscheduler")
 
 
 dotenv.config()
+app.use(morgan("dev"));
+app.use(express.json());
+app.use(cookieParser());
+app.use(expressvalidator());
+app.use(cors());
 
 //db
 mongoose.connect
-        (   process.env.MONGO_URI,
-            {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true , useFindAndModify: false }    
-        )
-            .then( () => {console.log('db connected')} )
+    (process.env.MONGO_URI,
+        { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true, useFindAndModify: false }
+    )
+    .then(() => { console.log('db connected') })
 
 mongoose.connection.on('error', err => {
     console.log(`db connection error: ${err.message} `)
-} );
+});
 
 // bring in routes
-const authroutes=require('./route/auth');
-const userroutes=require('./route/user');
-const cryptoroutes=require('./route/crypto');
+const authroutes = require('./route/auth');
+const userroutes = require('./route/user');
+const cryptoroutes = require('./route/crypto');
+const coinroutes = require('./route/coin')
 //apidocs
-app.get('/',(req,res) =>
-{
-    fs.readFile('docs/apidocs.json',(err,data)=>
-    {
-        if(err)     res.status(400).json({error:err});
-        
-        const docs=JSON.parse(data);
+app.get('/', (req, res) => {
+    fs.readFile('docs/apidocs.json', (err, data) => {
+        if (err) res.status(400).json({ error: err });
+
+        const docs = JSON.parse(data);
         res.json(docs);
     })
 })
@@ -47,31 +51,28 @@ app.get('/',(req,res) =>
 
 
 //middleware
-app.use(morgan("dev"));
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use(expressvalidator()); 
-app.use(cors());
-app.use("/",authroutes);
-app.use("/",userroutes);
-app.use("/",cryptoroutes);
+
+app.use("/", authroutes);
+app.use("/", userroutes);
+app.use("/", cryptoroutes);
+app.use("/", coinroutes)
 
 // custom middleware
 app.use(function (err, req, res, next) {
     if (err.name === 'UnauthorizedError') {
-      res.status(401).json({error: "Unauthorised!"});
-    }});
+        res.status(401).json({ error: "Unauthorised!" });
+    }
+});
 
 
 
-const port=process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
-if(process.env.NODE_ENV == 'production')
-{
+if (process.env.NODE_ENV == 'production') {
     app.use(express.static("second-crypto-frontend/build"));
-    app.get("*",(req,res)=>{
-        res.sendFile(path.resolve(__dirname,'second-crypto-frontend','build','index.html'))
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'second-crypto-frontend', 'build', 'index.html'))
     })
 }
 
-app.listen(port,()=>{   console.log(`A node JS API : ${port}`); })
+app.listen(port, () => { console.log(`A node JS API : ${port}`); })
